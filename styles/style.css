@@ -1,0 +1,51 @@
+.bg{
+    background-color: antiquewhite;
+}
+
+.title{
+    font-size: 70px;
+}
+
+.titleRow{
+border-bottom: 1px solid black;
+background-color: whitesmoke;
+}
+
+.quoteText{
+    font-size: 40px;
+}
+
+.authorText{
+    font-size: 50px;
+}
+
+.inputText{
+ margin-left: 15px;
+ text-align: center;
+}
+
+span:hover[isLetter]{
+    color: black;
+    background-color: yellow;
+}
+
+.alphabetInput{
+    width: 80%;
+}
+
+.alphabetInputCorrect{
+    width: 80%;
+    color: green;
+    background-color: gold;
+    pointer-events: none;
+}
+
+
+.redText{
+    color: red;
+    /* background-color: red; */
+}
+
+.greenText{
+    color: green
+}
