@@ -14,6 +14,8 @@ let authorUppers = [];
 let quoteUppers = [];
 let lettersUsed = [];
 let solvedLetters = [];
+let correctQuoteIndicies = [];
+let correctAuthorIndicies = [];
 let alphabet = [
   "a",
   "b",
@@ -97,7 +99,13 @@ async function fetchQuote() {
   }
   author = author.toLowerCase();
   cryptoquote();
+  createInputs();
 
+
+  createAlphabetInputs();
+}
+
+function createInputs(){
   for (let i = 0; i < quote.length; i++) {
     const span = document.createElement("span");
     if (quoteUppers.includes(i)) {
@@ -129,12 +137,6 @@ async function fetchQuote() {
     authorArray[i] = modifiedAuthor[i];
     quoteAuthor.appendChild(span);
   }
-
-  createAlphabetInputs();
-}
-
-function createInputs(){
-  
 }
 
 function cryptoquote() {
@@ -243,19 +245,24 @@ function updateQuote(event) {
         } else {
           span.innerText = newLetter;
         }
-        span.className = "redText";
+        if (!correctQuoteIndicies.includes(quoteIndicies[i])){
+          span.className = "redText";
+        }
       }
 
       const authorIndicies = findIndices(authorArray, originalLetter);
 
       for (let i = 0; i < authorIndicies.length; i++) {
-        let span = document.getElementById("author" + authorIndicies[i]);
+        let span = document.getElementById("author" + authorIndicies[i]); 
+        if (span.className == 'greenText') {}
         if (authorUppers.includes(authorIndicies[i])) {
           span.innerText = newLetter.toUpperCase();
         } else {
           span.innerText = newLetter;
         }
-        span.className = "redText";
+        if (!correctAuthorIndicies.includes(authorIndicies[i])){
+          span.className = "redText";
+        }
       }
     });
   };
@@ -294,7 +301,6 @@ function createAlphabetInputs() {
   const letterInputsContainer = document.getElementById("letterInputs");
   findLetters(modifiedQuote);
   findLetters(modifiedAuthor);
-  console.log(lettersUsed);
   for (let i = 0; i < 26; i++) {
     const letter = String.fromCharCode(65 + i); // Get the ASCII character code for letters
     if (lettersUsed.includes(letter.toLowerCase())) {
@@ -343,23 +349,22 @@ function checkAnswer() {
     if (check == check2 && !solvedLetters.includes(letterR)) {
       const input = document.getElementById(`letter${letterO.toUpperCase()}`);
       const label = document.getElementById(`label${letterO.toUpperCase()}`);
-      input.disabled = true;
-      input.className = "alphabetInputCorrect";
-      console.log(
-        "The letter " +
-          letterR +
-          " equaling the letter " +
-          letterO +
-          " is correct"
-      );
+      input.remove();
+      label.remove();
+      // input.className = "alphabetInputCorrect";
+      
+      console.log("The letter " + letterR + " equaling the letter " + letterO + " is correct");
+      
       for (let i = 0; i < quoteIndicies.length; i++) {
+        console.log(quoteIndicies[i]);
         let span = document.getElementById("quote" + quoteIndicies[i]);
         span.className = "greenText";
+        correctQuoteIndicies.push(quoteIndicies[i]);
       }
       for (let i = 0; i < authorIndicies.length; i++) {
-        let span = document.getElementById("quote" + authorIndicies[i]);
-        alert("ran");
+        let span = document.getElementById("author" + authorIndicies[i]);
         span.className = "greenText";
+        correctAuthorIndicies.push(authorIndicies[i]);
       }
       solvedLetters.push(letterR);
     }
