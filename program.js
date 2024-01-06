@@ -269,19 +269,21 @@ function updateQuote(event) {
 
   applyStyling(modifiedQuote);
 
-  solvedLetters.forEach((letter) => {
-    const quoteIndicies = findIndices(quoteArray, letter);
-    quoteIndicies.forEach((index) => {
-      const span = document.getElementById("quote" + index);
-      span.className = "greenText";
-    });
+  // solvedLetters.forEach((letter) => {
+  //   const quoteIndicies = findIndices(quoteArray, letter);
+  //   console.log(quoteIndicies);
+  //   console.log(index);
+  //   quoteIndicies.forEach((index) => {
+  //     const span = document.getElementById("quote" + index);
+  //     span.className = "greenText";
+  //   });
 
-    const authorIndicies = findIndices(authorArray, letter);
-    authorIndicies.forEach((index) => {
-      const span = document.getElementById("author" + index);
-      span.className = "greenText";
-    });
-  });
+  //   const authorIndicies = findIndices(authorArray, letter);
+  //   authorIndicies.forEach((index) => {
+  //     const span = document.getElementById("author" + index);
+  //     span.className = "greenText";
+  //   });
+  // });
 }
 
 function findLetters(str) {
@@ -329,9 +331,10 @@ function createAlphabetInputs() {
 }
 
 function spanClick(event) {
-  const span = event.target.textContent.toUpperCase();
-  let input = document.getElementById("letter" + span);
-  input.select();
+  const span = event.target;
+  const spanText = event.target.textContent.toUpperCase();
+  let input = document.getElementById("letter" + spanText);
+  if (span.getAttribute("isLetter"))input.select();
 }
 
 function checkAnswer() {
@@ -358,15 +361,18 @@ function checkAnswer() {
       for (let i = 0; i < quoteIndicies.length; i++) {
         console.log(quoteIndicies[i]);
         let span = document.getElementById("quote" + quoteIndicies[i]);
+        span.removeAttribute("isLetter");
         span.className = "greenText";
         correctQuoteIndicies.push(quoteIndicies[i]);
       }
       for (let i = 0; i < authorIndicies.length; i++) {
         let span = document.getElementById("author" + authorIndicies[i]);
+        span.removeAttribute("isLetter");
         span.className = "greenText";
         correctAuthorIndicies.push(authorIndicies[i]);
       }
       solvedLetters.push(letterR);
+      if (solvedLetters.length == lettersUsed.length) alert("You win!!");
     }
   }
 }
