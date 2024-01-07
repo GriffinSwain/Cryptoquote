@@ -3,11 +3,18 @@ import { getQuote } from "./quotefetch.js";
 let quoteBody = document.getElementById("quoteText");
 let quoteAuthor = document.getElementById("authorText");
 let checkButton = document.getElementById("checkButton");
+let victoryModal = document.getElementById("victoryModal");
+let timeTaken = document.getElementById("timeTaken");
+let answerChecks = document.getElementById("answerChecks");
 let quote;
 let modifiedQuote = "";
 let wipQuote = "";
 let author;
 let modifiedAuthor = "";
+let numberChecks = 0;
+let seconds = 0;
+let minutes = 0;
+let hours = 0;
 let quoteArray = [];
 let authorArray = [];
 let authorUppers = [];
@@ -78,7 +85,7 @@ let data;
 let zCheck = false;
 
 fetchQuote();
-
+let timerInterval = setInterval(updateTimer, 1000);
 checkButton.addEventListener("click", checkAnswer);
 
 //this is the main function of the program. It calles the fetchQuote function that was imported,
@@ -98,11 +105,27 @@ async function fetchQuote() {
       authorUppers.push(i);
   }
   author = author.toLowerCase();
+
+  scrambleAlphabet();
   cryptoquote();
   createInputs();
-
-
   createAlphabetInputs();
+
+}
+
+function scrambleAlphabet() {
+  changeAlphabet = [];
+  //This for loop randomizes the alphabet so each letter corresponds with a different random letter
+  for (let i = 0; i < 26; i++) {
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * alphabet.length);
+    } while (alphabet[randomIndex] == checkAlphabet[i] && i != 25);
+
+    const randomLetter = alphabet[randomIndex];
+    changeAlphabet.push(randomLetter);
+    alphabet.splice(randomIndex, 1);
+  }
 }
 
 function createInputs(){
@@ -140,7 +163,6 @@ function createInputs(){
 }
 
 function cryptoquote() {
-  scrambleAlphabet();
 
   for (let a = 0; a < quote.length; a++) {
     if (/[a-zA-Z]/.test(quote[a])) {
@@ -163,6 +185,21 @@ function cryptoquote() {
   if (zCheck) cryptoquote();
 }
 
+function updateTimer() {
+  seconds++;
+  if (seconds === 60) {
+      seconds = 0;
+      minutes++;
+      if (minutes === 60) {
+          minutes = 0;
+          hours++;
+      }
+  }
+  console.log(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+}
+
+
+
 const findIndices = (arr, target) => {
   return arr.reduce((indices, element, index) => {
     if (element === target) {
@@ -172,20 +209,7 @@ const findIndices = (arr, target) => {
   }, []);
 };
 
-function scrambleAlphabet() {
-  changeAlphabet = [];
-  //This for loop randomizes the alphabet so each letter corresponds with a random other letter
-  for (let i = 0; i < 26; i++) {
-    let randomIndex;
-    do {
-      randomIndex = Math.floor(Math.random() * alphabet.length);
-    } while (alphabet[randomIndex] == checkAlphabet[i] && i != 25);
 
-    const randomLetter = alphabet[randomIndex];
-    changeAlphabet.push(randomLetter);
-    alphabet.splice(randomIndex, 1);
-  }
-}
 
 function updateQuote(event) {
   const letterChange = event.target.value.toLowerCase();
@@ -269,21 +293,6 @@ function updateQuote(event) {
 
   applyStyling(modifiedQuote);
 
-  // solvedLetters.forEach((letter) => {
-  //   const quoteIndicies = findIndices(quoteArray, letter);
-  //   console.log(quoteIndicies);
-  //   console.log(index);
-  //   quoteIndicies.forEach((index) => {
-  //     const span = document.getElementById("quote" + index);
-  //     span.className = "greenText";
-  //   });
-
-  //   const authorIndicies = findIndices(authorArray, letter);
-  //   authorIndicies.forEach((index) => {
-  //     const span = document.getElementById("author" + index);
-  //     span.className = "greenText";
-  //   });
-  // });
 }
 
 function findLetters(str) {
@@ -340,6 +349,12 @@ function spanClick(event) {
 function checkAnswer() {
   console.log(changeAlphabet, checkAlphabet);
   console.log(replacements);
+  const modal = new bootstrap.Modal(victoryModal);
+  modal.show();
+  
+  timeTaken.textContent = (`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+
+  
   for (let i = 0; i < replacements.length; i++) {
     const letterO = replacements[i][0];
     const letterR = replacements[i][1];
@@ -372,7 +387,15 @@ function checkAnswer() {
         correctAuthorIndicies.push(authorIndicies[i]);
       }
       solvedLetters.push(letterR);
-      if (solvedLetters.length == lettersUsed.length) alert("You win!!");
+      // This if statement is ran if the player gets every letter correct
+      if (solvedLetters.length == lettersUsed.length){
+        const modal = new bootstrap.Modal(victoryModal);
+        modal.show();
+      }else{
+      }
     }
   }
+  numberChecks++;
+  answerChecks.textContent = numberChecks;
+  timeTaken.textContent = (`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
 }
