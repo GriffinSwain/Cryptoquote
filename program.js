@@ -6,6 +6,7 @@ let checkButton = document.getElementById("checkButton");
 let victoryModal = document.getElementById("victoryModal");
 let timeTaken = document.getElementById("timeTaken");
 let answerChecks = document.getElementById("answerChecks");
+let restartButton = document.getElementById("restartButton");
 let quote;
 let modifiedQuote = "";
 let wipQuote = "";
@@ -87,6 +88,7 @@ let zCheck = false;
 fetchQuote();
 let timerInterval = setInterval(updateTimer, 1000);
 checkButton.addEventListener("click", checkAnswer);
+restartButton.addEventListener("click", restartProgram)
 
 //this is the main function of the program. It calles the fetchQuote function that was imported,
 //gets the quote & author, then calles the cryptoquote function to make it into a puzzle
@@ -397,5 +399,24 @@ function checkAnswer() {
   }
   numberChecks++;
   answerChecks.textContent = numberChecks;
-  timeTaken.textContent = (`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+  // timeTaken.textContent = (`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+}
+
+function restartProgram(){
+  alert("clicked");
+  quoteBody.removeChild(quoteBody.firstChild);
+  quoteAuthor.innerHTML = '';
+  data = '';
+  seconds = 0;
+  minutes = 0;
+  hours = 0;
+  numberChecks = 0;
+  authorUppers = [];
+  quote = '';
+  quoteUppers = [];
+  lettersUsed = [];
+  solvedLetters = [];
+  correctQuoteIndicies = [];
+  correctAuthorIndicies = [];
+  fetchQuote();
 }
